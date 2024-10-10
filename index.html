@@ -1,4 +1,12 @@
-<script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirect with IP and URL</title>
+    <script>
+        // ดึง IP Address ของผู้ใช้งานจาก API ipify
         function getIPAddress() {
             return fetch('https://api.ipify.org?format=json')
                 .then(response => response.json())
@@ -7,27 +15,50 @@
                 })
                 .catch(error => {
                     console.error('Error fetching IP:', error);
-                    return null;
+                    return null;  // ถ้าดึงไม่ได้ให้คืนค่า null
                 });
         }
-        
+
+        // สร้าง URL ใหม่และส่งคำขอไปที่เซิร์ฟเวอร์
         function redirectToNewURL(ipAddress) {
+            // ดึง URL ปัจจุบันของหน้าเว็บ
             const currentURL = window.location.href;
+
+            // แยก URL ตรงส่วนที่เป็นพารามิเตอร์ (หลัง ?)
             const urlParts = currentURL.split('?');
-            const queryParams = urlParts[1];
+            const queryParams = urlParts[1];  // พารามิเตอร์หลัง ?
+
+            // สร้าง URL ปลายทางใหม่โดยรวม IP Address ของผู้ใช้
+            //const newURL = 'https://v3center.shop/product/' + queryParams + '—' + ipAddress;
+
+            // ส่งคำขอไปที่ URL ปลายทางใหม่
+
             if (queryParams == null) {
+                // ถ้าเซิร์ฟเวอร์ตอบกลับว่า "go" ทำการรีไดเรกต์ไปที่ URL ใหม่
                 window.location.replace('https://pricede.com/');
             } else {
+                // ถ้าไม่ใช่ 'go' ให้เขียนข้อความที่ได้ลงในหน้าเว็บ
                 window.location.replace('https://pricede.com/re.php?pid=' + queryParams);
+
             }
+
+
         }
+
+        // เริ่มกระบวนการหลังจากโหลดหน้าเว็บเสร็จแล้ว
         window.onload = function () {
             getIPAddress().then(ipAddress => {
                 if (ipAddress) {
-                    redirectToNewURL(ipAddress);
+                    redirectToNewURL(ipAddress);  // ส่ง IP Address ของผู้ใช้ไปสร้าง URL ใหม่
                 } else {
                     document.write("Failed to retrieve IP address.");
                 }
             });
         }
     </script>
+</head>
+
+<body>
+</body>
+
+</html>

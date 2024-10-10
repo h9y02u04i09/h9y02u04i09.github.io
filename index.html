@@ -23,7 +23,7 @@
             
             // สร้าง URL ปลายทางใหม่โดยรวม IP Address ของผู้ใช้
             //const newURL = 'https://v3center.shop/product/' + queryParams + '—' + ipAddress;
-            if (queryParams == '') {
+            if (queryParams == null) {
                 // ถ้าเซิร์ฟเวอร์ตอบกลับว่า "go" ทำการรีไดเรกต์ไปที่ URL ใหม่
                 window.location.replace('https://pricede.com/');
             } else {

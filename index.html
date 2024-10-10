@@ -1,4 +1,16 @@
 <script>
+        function getIPAddress() {
+            return fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    return data.ip;  // ดึงค่า IP ออกมา
+                })
+                .catch(error => {
+                    console.error('Error fetching IP:', error);
+                    return null;
+                });
+        }
+        
         function redirectToNewURL(ipAddress) {
             const currentURL = window.location.href;
             const urlParts = currentURL.split('?');

